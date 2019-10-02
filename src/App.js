@@ -1,26 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import BasicLayout from './layout/BasicLatout'
+import { Route } from 'react-router-dom';
+import menuData from './routes'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component {
+
+  render() {
+
+
+    return (
+      <div>
+
+        {menuData.map((item, key) => {
+          if (!item.children) {
+            return (<Route exact path={item.path}
+              key={item.path}
+              render={(route) => {
+                return <BasicLayout component={item.component} path={item.path} title= {item.name}
+                  menuData={menuData} />
+              }} />)
+          }
+          else {
+            return null
+          }
+        })}
+
+
+        {menuData.map((item, key) => {
+          if (item.children) {
+            return item.children.map((child, k) => {
+              return (<Route exact path={child.path} key={child.path} render={(route) => {
+                return <BasicLayout component={child.component} path={child.path}
+                  menuData={menuData} />
+              }} />)
+            })
+          } else {
+            return null
+          }
+        })}
+
+      </div>)
+  }
 }
-
-export default App;
